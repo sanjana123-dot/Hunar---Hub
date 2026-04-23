@@ -12,6 +12,7 @@ import com.hunarhub.security.JwtUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.authentication.DisabledException;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -118,6 +119,10 @@ public class AuthService {
         if (user == null) {
             throw new BadRequestException("Invalid credentials");
         }
+
+        if (Boolean.TRUE.equals(user.getSuspended())) {
+            throw new BadRequestException("Your account is suspended. Please contact admin.");
+        }
         
         try {
             // Authenticate using the user's email (Spring Security uses email as username)
@@ -128,6 +133,8 @@ public class AuthService {
             String token = jwtUtil.generateToken(user.getEmail());
 
             return new AuthResponse(token, "Bearer", user.getId(), user.getName(), user.getEmail(), user.getRole());
+        } catch (DisabledException e) {
+            throw new BadRequestException("Your account is suspended. Please contact admin.");
         } catch (org.springframework.security.core.AuthenticationException e) {
             throw new BadRequestException("Invalid credentials");
         }

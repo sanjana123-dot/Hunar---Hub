@@ -123,4 +123,14 @@ public class AdminController {
     public ResponseEntity<List<UserSummaryDto>> getAllUsers() {
         return ResponseEntity.ok(adminService.getAllUsers());
     }
+
+    @PutMapping("/users/{id}/suspend")
+    public ResponseEntity<UserSummaryDto> suspendUser(@PathVariable Long id) {
+        return ResponseEntity.ok(adminService.suspendUser(id));
+    }
+
+    @PutMapping("/users/{id}/reactivate")
+    public ResponseEntity<UserSummaryDto> reactivateUser(@PathVariable Long id) {
+        return ResponseEntity.ok(adminService.reactivateUser(id));
+    }
 }

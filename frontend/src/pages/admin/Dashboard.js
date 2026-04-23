@@ -37,10 +37,22 @@ const Dashboard = () => {
           </Link>
           <Link 
             to="/admin/entrepreneurs" 
-            className={location.pathname.includes('/entrepreneurs') ? 'active' : ''}
+            className={
+              location.pathname.includes('/entrepreneurs') &&
+              !location.pathname.includes('/entrepreneurs/pending')
+                ? 'active'
+                : ''
+            }
           >
             <span className="nav-icon" />
             Entrepreneurs
+          </Link>
+          <Link
+            to="/admin/entrepreneurs/pending"
+            className={location.pathname.includes('/entrepreneurs/pending') ? 'active' : ''}
+          >
+            <span className="nav-icon" />
+            Pending Approvals
           </Link>
           <Link 
             to="/admin/categories" 

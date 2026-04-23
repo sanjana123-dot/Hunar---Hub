@@ -42,9 +42,15 @@ public class User {
     @Column(name = "reset_password_expires_at")
     private LocalDateTime resetPasswordExpiresAt;
 
+    @Column(name = "suspended", nullable = false)
+    private Boolean suspended = false;
+
     @PrePersist
     protected void onCreate() {
         createdAt = LocalDateTime.now();
+        if (suspended == null) {
+            suspended = false;
+        }
     }
 
     public enum Role {

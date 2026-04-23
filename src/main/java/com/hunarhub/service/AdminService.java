@@ -368,12 +368,56 @@ public class AdminService {
                 .collect(Collectors.toList());
     }
 
+    @Transactional
+    public UserSummaryDto suspendUser(Long userId) {
+        User user = userRepository.findById(userId)
+                .orElseThrow(() -> new ResourceNotFoundException("User not found"));
+        if (user.getRole() == User.Role.ADMIN) {
+            throw new BadRequestException("Admin users cannot be suspended");
+        }
+        if (!Boolean.TRUE.equals(user.getSuspended())) {
+            user.setSuspended(true);
+            user = userRepository.save(user);
+            notificationService.createNotification(
+                    user,
+                    "Account suspended",
+                    "Your account has been suspended by admin. Please contact support for help.",
+                    "ACCOUNT_SUSPENDED",
+                    null,
+                    null,
+                    null
+            );
+        }
+        return convertUserToSummary(user);
+    }
+
+    @Transactional
+    public UserSummaryDto reactivateUser(Long userId) {
+        User user = userRepository.findById(userId)
+                .orElseThrow(() -> new ResourceNotFoundException("User not found"));
+        if (Boolean.TRUE.equals(user.getSuspended())) {
+            user.setSuspended(false);
+            user = userRepository.save(user);
+            notificationService.createNotification(
+                    user,
+                    "Account reactivated",
+                    "Your account has been reactivated by admin. You can continue using HunarHub.",
+                    "ACCOUNT_REACTIVATED",
+                    null,
+                    null,
+                    null
+            );
+        }
+        return convertUserToSummary(user);
+    }
+
     private UserSummaryDto convertUserToSummary(User user) {
         UserSummaryDto dto = new UserSummaryDto();
         dto.setId(user.getId());
         dto.setName(user.getName());
         dto.setEmail(user.getEmail());
         dto.setRole(user.getRole());
+        dto.setSuspended(Boolean.TRUE.equals(user.getSuspended()));
         dto.setCreatedAt(user.getCreatedAt());
         return dto;
     }

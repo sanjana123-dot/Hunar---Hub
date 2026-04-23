@@ -32,6 +32,10 @@ public class CustomUserDetailsService implements UserDetailsService {
         return new org.springframework.security.core.userdetails.User(
                 user.getEmail(),
                 user.getPassword(),
+                !Boolean.TRUE.equals(user.getSuspended()),
+                true,
+                true,
+                true,
                 getAuthorities(user)
         );
     }

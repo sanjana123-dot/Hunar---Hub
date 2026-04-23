@@ -15,6 +15,7 @@ public class UserSummaryDto {
     private String name;
     private String email;
     private User.Role role;
+    private Boolean suspended;
     private LocalDateTime createdAt;
 }
 

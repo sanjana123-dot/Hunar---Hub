@@ -106,3 +106,27 @@
   color: #c53030;
 }
 
+.admin-action-btn {
+  border: none;
+  border-radius: 8px;
+  font-size: 0.8rem;
+  font-weight: 600;
+  padding: 6px 10px;
+  cursor: pointer;
+}
+
+.admin-action-btn.suspend {
+  background-color: #fed7d7;
+  color: #9b2c2c;
+}
+
+.admin-action-btn.reactivate {
+  background-color: #c6f6d5;
+  color: #22543d;
+}
+
+.admin-action-disabled {
+  color: #718096;
+  font-size: 0.8rem;
+}
+
